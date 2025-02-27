@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="UniTok: A Unified Tokenizer for Visual Generation and Understanding">
+  <meta name="keywords" content="UniTok, Vision Tokenizer, Unified Tokenizer, MLLM, Multimodal Large Language Models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UniTok: A Unified Tokenizer for Visual Generation and Understanding</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+<!--  <link rel="icon" href="./static/images/favicon.svg">-->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!--<nav class="navbar" role="navigation" aria-label="main navigation">-->
+<!--  <div class="navbar-brand">-->
+<!--    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">-->
+<!--      <span aria-hidden="true"></span>-->
+<!--      <span aria-hidden="true"></span>-->
+<!--      <span aria-hidden="true"></span>-->
+<!--    </a>-->
+<!--  </div>-->
+<!--  <div class="navbar-menu">-->
+<!--    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">-->
+<!--      <a class="navbar-item" href="https://keunhong.com">-->
+<!--      <span class="icon">-->
+<!--          <i class="fas fa-home"></i>-->
+<!--      </span>-->
+<!--      </a>-->
+
+<!--      <div class="navbar-item has-dropdown is-hoverable">-->
+<!--        <a class="navbar-link">-->
+<!--          More Research-->
+<!--        </a>-->
+<!--        <div class="navbar-dropdown">-->
+<!--          <a class="navbar-item" href="https://hypernerf.github.io">-->
+<!--            HyperNeRF-->
+<!--          </a>-->
+<!--          <a class="navbar-item" href="https://nerfies.github.io">-->
+<!--            Nerfies-->
+<!--          </a>-->
+<!--          <a class="navbar-item" href="https://latentfusion.github.io">-->
+<!--            LatentFusion-->
+<!--          </a>-->
+<!--          <a class="navbar-item" href="https://photoshape.github.io">-->
+<!--            PhotoShape-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--  </div>-->
+<!--</nav>-->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">UniTok: A Unified Tokenizer for <br> Visual Generation and Understanding</h1>
+          <div class="is-size-5 publication-authors" style="margin-bottom: 10px">
+            <span class="author-block"><a href="https://machuofan.github.io/">Chuofan Ma</a><sup>1,2</sup>,&nbsp&nbsp</span>
+            <span class="author-block"><a href="https://wjf5203.github.io/">Junfeng Wu</a><sup>2,3</sup>,&nbsp&nbsp</span>
+            <span class="author-block"><a href="https://enjoyyi.github.io/">Yi Jiang</a><sup>2&dagger;</sup>,&nbsp&nbsp</span>
+            <br>
+            <span class="author-block"><a href="https://jihanyang.github.io/">Jihan Yang</a><sup>1</sup>,&nbsp&nbsp</span>
+            <span class="author-block"><a href="https://xinyu-andy.github.io/">Xin Yu</a><sup>1</sup>,&nbsp&nbsp</span>
+            <span class="author-block"><a href="https://shallowyuan.github.io/">Zehuan Yuan</a><sup>2*</sup>,&nbsp&nbsp</span>
+            <span class="author-block"><a href="https://openreview.net/profile?id=~BINGYUE_PENG1">Bingyue Peng</a><sup>2</sup>,&nbsp&nbsp</span>
+            <span class="author-block"><a href="https://xjqi.github.io/">Xiaojuan Qi</a><sup>1&dagger;*</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>HKU,&nbsp&nbsp&nbsp</span>
+            <span class="author-block"><sup>2</sup>ByteDance,&nbsp&nbsp&nbsp</span>
+            <span class="author-block"><sup>3</sup>HUST</span>
+          </div>
+
+          <div class="column has-text-centered">
+<!--            <div class="publication-links">-->
+<!--               PDF Link.-->
+<!--              <span class="link-block">-->
+<!--                <a href=""-->
+<!--                   class="external-link button is-normal is-rounded is-dark">-->
+<!--                  <span class="icon">-->
+<!--                      <i class="fas fa-file-pdf"></i>-->
+<!--                  </span>-->
+<!--                  <span>Paper</span>-->
+<!--                </a>-->
+<!--              </span>-->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+<!--              <span class="link-block">-->
+<!--                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"-->
+<!--                   class="external-link button is-normal is-rounded is-dark">-->
+<!--                  <span class="icon">-->
+<!--                      <i class="fab fa-youtube"></i>-->
+<!--                  </span>-->
+<!--                  <span>Video</span>-->
+<!--                </a>-->
+<!--              </span>-->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/FoundationVision/UniTok"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Huggingface Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/FoundationVision/UniTok"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">&#129303</span>
+                  <span>Model</span>
+                </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--<section class="hero teaser">-->
+<!--  <div class="container is-max-desktop">-->
+<!--    <div class="columns is-centered">-->
+<!--      <div class="column is-four-fifths">-->
+<!--          <img src="static/images/teaser.png" alt="Teaser image."/>-->
+<!--          <h2 class="subtitle has-text-justified">-->
+<!--            Groma is a multimodal large language model with exceptional region understanding and visual grounding capabilities.-->
+<!--            It can take user-defined region inputs (boxes) as well as generate long-form responses that are grounded to visual context.-->
+<!--          </h2>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            The representation disparity between visual generation and understanding imposes a critical challenge in integrating these capabilities
+            into a single framework. To bridge this gap, we introduce <b>UniTok</b>, a discrete visual tokenizer that encodes fine-grained details for
+            generation while also capturing high-level semantics for understanding. Despite recent studies have shown that these objectives could
+            induce loss conflicts in training, we reveal that <b>the underlying bottleneck stems from limited representational capacity of discrete tokens</b>.
+            We address this by introducing multi-codebook quantization, which divides vector quantization with several independent sub-codebooks
+            to expand the latent feature space, while avoiding training instability caused by overlarge codebooks.
+            Our method significantly raises the upper limit of <b>unified discrete tokenizers</b> to match or even surpass
+            <b>domain-specific continuous tokenizers</b>. For instance, UniTok achieves a remarkable rFID of 0.38 (versus 0.87 for SD-VAE)
+            and a zero-shot accuracy of 78.6% (versus 76.2% for CLIP) on ImageNet.
+            The code is available at <a href="https://github.com/FoundationVision/UniTok">https://github.com/FoundationVision/UniTok</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+    <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-four-fifths">
+              <img src="static/imgs/vis.png" alt="Teaser image."/>
+<!--              <h2 class="subtitle has-text-justified">-->
+<!--                Groma is a multimodal large language model with exceptional region understanding and visual grounding capabilities.-->
+<!--                It can take user-defined region inputs (boxes) as well as generate long-form responses that are grounded to visual context.-->
+<!--              </h2>-->
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<br>
+<br>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-fullwidth">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <p>
+            <b>Quantization Bottleneck.</b>
+            A promising paradigm to build unified tokenizers is to combine CLIP and VQVAE training.
+            However, it typically results in slow convergence and suboptimal performance.
+            While previous studies tend to attribute this to conflicts between divergent training objectives,
+            we show that the bottleneck primarily stems from the quantization process. Specifically, token factorization
+            and discretization, which are essential for VQVAE, significantly compromise the expressiveness of tokens.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered ">
+      <div class="column is-four-fifths ">
+        <img src="./static/imgs/analysis.jpg"/>
+        <div class="is-size-6 has-text-justified">
+          <p>
+            <b>(a):</b> The unified tokenizer training paradigm, which integrates CLIP supervision into VQVAE training.
+            <b>(b):</b> Roadmap to build UniTok. The blue bars illustrate the progressive changes in VQA performance from
+            CLIP tokenizer to unified tokenizer, while the purple bars outline the improvements in UniTok.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-fullwidth">
+        <div class="content has-text-justified">
+          <p>
+            <b>Multi-Codebook Quantization.</b>
+            In light of the bottleneck, we seek to expand the codebook size and latent code dimension to
+            better approximate the continuous feature space. However, naively doing so results in low codebook utilization
+            and diminished performance gains. Drawing inspiration from the divide-and-conquer algorithm,
+            we introduce multi-codebook quantization, which divides a visual token into multiple chunks and discretizes
+            each with independent sub-codebooks. This effectively scales up the latent space with the number
+            of sub-codebooks, while circumventing the problem associated with large codebooks.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered ">
+      <div class="column is-four-fifths ">
+        <img src="./static/imgs/framework.jpg" />
+      </div>
+    </div>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-fullwidth">
+        <div class="content has-text-justified">
+          <p>
+            <b>Unified MLLM.</b>
+            Built upon UniTok, we construct a unified MLLM capable of both multimodal generation and understanding.
+            Particularly, we leverage the MLLM framework introduced in Liquid, which models vision and language sequences
+            with a universal next-token prediction loss. But instead of learning the visual codebook from scratch,
+            we reuse code embeddings of UniTok by projecting them to the MLLM token space with an MLP projector.
+            Our model sets a new state-of-the-art among unified autoregressive MLLMs on both visual understanding and generation benchmarks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Results</h2>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-fullwidth">
+        <h2 class="title is-5">Tokenizer Performance</h2>
+        <img src="./static/imgs/bench_1.jpg"/>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-fullwidth">
+        <h2 class="title is-5">Understanding Performance</h2>
+        <img src="./static/imgs/bench_2.jpg"/>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-fullwidth">
+        <h2 class="title is-5">Generation Performance</h2>
+        <img src="./static/imgs/bench_3.jpg"/>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-fullwidth">
+        <h2 class="title is-5">Ablation Study</h2>
+        <img src="./static/imgs/ablation.jpg"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{unitok,
+      title={UniTok: A Unified Tokenizer for Visual Generation and Understanding},
+      author={Ma, Chuofan and Wu, Junfeng and Jiang, Yi and Yang, Jihan and Yu, Xin and Yuan, Zehuan and Peng, Bingyue and Qi, Xiaojuan},
+      year={2025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+<!--    <div class="content has-text-centered">-->
+<!--      <a class="icon-link"-->
+<!--         href="./static/videos/nerfies_paper.pdf">-->
+<!--        <i class="fas fa-file-pdf"></i>-->
+<!--      </a>-->
+<!--      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>-->
+<!--        <i class="fab fa-github"></i>-->
+<!--      </a>-->
+<!--    </div>-->
+    <div class="columns is-centered">
+      <a href="https://github.com/nerfies/nerfies.github.io">Website template</a>
+<!--      <div class="column is-8">-->
+<!--        <div class="content">-->
+<!--          <p>-->
+<!--            This website is licensed under a <a rel="license"-->
+<!--                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative-->
+<!--            Commons Attribution-ShareAlike 4.0 International License</a>.-->
+<!--          </p>-->
+<!--          <p>-->
+<!--            This means you are free to borrow the <a-->
+<!--              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,-->
+<!--            we just ask that you link back to this page in the footer.-->
+<!--            Please remember to remove the analytics code included in the header of the website which-->
+<!--            you do not want on your website.-->
+<!--          </p>-->
+<!--        </div>-->
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

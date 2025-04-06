@@ -57,7 +57,7 @@ class AttnProjection(nn.Module):
         self.in_dim = in_dim
         self.out_dim = out_dim
         self.norm1 = norm_layer(in_dim)
-        self.attn = CausalAttention(in_dim, out_dim, num_heads)
+        self.attn = PlainAttention(in_dim, out_dim, num_heads)
         self.proj = nn.Linear(in_dim, out_dim)
         self.norm3 = norm_layer(in_dim)
 

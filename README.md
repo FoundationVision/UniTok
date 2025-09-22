@@ -30,6 +30,7 @@ which sets a new state-of-the-art among unified autoregressive MLLMs.
 ![teaser](assets/samples.png)
 
 ## News
+**2025-09-18:** UniTok is accepted at NeurIPS 2025 as a spotlight.
 **2025-05-19:** We find UniTok favors generation **without classifier-free-guidance** -- 
 it reduces gFID (without cfg) from 14.6 to 2.51 on ImageNet 256x256 using LlamaGen-XXL as the generator.
 Please refer to the updated [EVAL.md](eval/EVAL.md) for more details.

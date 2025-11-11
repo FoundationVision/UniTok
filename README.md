@@ -1,4 +1,6 @@
 <div align="center">
+<img src="./assets/logo.png" alt="UniTok" width="200">
+
 <h1>UniTok: A Unified Tokenizer <br> for Visual Generation and Understanding</h1>
 
 [**Chuofan Ma**](https://machuofan.github.io/)<sup>1,2</sup> · [**Yi Jiang**](https://enjoyyi.github.io/)<sup>2&dagger;</sup> · [**Junfeng Wu**](https://wjf5203.github.io/)<sup>2,3</sup> · [**Jihan Yang**](https://jihanyang.github.io/)<sup>1</sup>

@@ -49,6 +49,26 @@ from datasets import load_from_disk, concatenate_datasets
 local_rank = None
 
 
+def _from_pretrained_dtype(cls, model_path, training_args, attn_implementation, bnb_kwargs):
+    """Load a model with `dtype` (transformers >= 4.56), falling back to `torch_dtype` for older versions."""
+    try:
+        return cls.from_pretrained(
+            model_path,
+            cache_dir=training_args.cache_dir,
+            attn_implementation=attn_implementation,
+            dtype=(torch.bfloat16 if training_args.bf16 else None),
+            **bnb_kwargs
+        )
+    except TypeError:
+        return cls.from_pretrained(
+            model_path,
+            cache_dir=training_args.cache_dir,
+            attn_implementation=attn_implementation,
+            torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
+            **bnb_kwargs
+        )
+
+
 def rank0_print(*args):
     if local_rank == 0:
         print(*args)
@@ -1209,64 +1229,40 @@ def train(attn_implementation=None):
         ))
     if model_args.vision_tower is not None:
         if "mistral" in model_args.model_name_or_path:
-            model = MiniGeminiMistralForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
+            model = _from_pretrained_dtype(MiniGeminiMistralForCausalLM, model_args.model_name_or_path,
+                                   training_args, attn_implementation, bnb_model_from_pretrained_args)
         elif "mixtral" in model_args.model_name_or_path:
-            model = MiniGeminiMixtralForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
+            model = _from_pretrained_dtype(MiniGeminiMixtralForCausalLM, model_args.model_name_or_path,
+                                   training_args, attn_implementation, bnb_model_from_pretrained_args)
             from deepspeed.utils import set_z3_leaf_modules
             set_z3_leaf_modules(model, [MixtralSparseMoeBlock])
         elif "gemma" in model_args.model_name_or_path:
             # import pdb;pdb.set_trace()
-            model = MiniGeminiGemmaForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
+            model = _from_pretrained_dtype(MiniGeminiGemmaForCausalLM, model_args.model_name_or_path,
+                                   training_args, attn_implementation, bnb_model_from_pretrained_args)
         else:
-            model = MiniGeminiLlamaForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
+            model = _from_pretrained_dtype(MiniGeminiLlamaForCausalLM, model_args.model_name_or_path,
+                                   training_args, attn_implementation, bnb_model_from_pretrained_args)
     else:
         if "gemma" in model_args.model_name_or_path:
             # import pdb;pdb.set_trace()
-            model = MiniGeminiGemmaForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
+            model = _from_pretrained_dtype(MiniGeminiGemmaForCausalLM, model_args.model_name_or_path,
+                                   training_args, attn_implementation, bnb_model_from_pretrained_args)
         else:
-            model = MiniGeminiLlamaForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
+            model = _from_pretrained_dtype(MiniGeminiLlamaForCausalLM, model_args.model_name_or_path,
+                                   training_args, attn_implementation, bnb_model_from_pretrained_args)
     model.config.use_cache = False
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
-        model.config.torch_dtype = (
-            torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
+        if hasattr(model.config, "dtype"):
+            # transformers >= 4.56: `dtype` is the replacement for `torch_dtype`
+            model.config.dtype = (
+                torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
+        else:
+            # transformers < 4.56: fall back to `torch_dtype`
+            model.config.torch_dtype = (
+                torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
 
     if training_args.gradient_checkpointing:
